@@ -16,7 +16,7 @@
 <body>
 <div class="wrap">
 <header class="hero"><div class="kicker">EcoPreneur TechFest 2026</div><h1>Saynana 🍌</h1><p>Pesan keripik favoritmu. Pilih rasa, tentukan jumlah, dan kirim pesanan secara online.</p><div class="price">Rp15.000 / bungkus</div></header>
-<nav class="tabs"><button id="tabOrder" class="tab active" onclick="showView('order')">🛍️ Form Pemesanan</button><button id="tabAdmin" class="tab" onclick="showView('admin')">📊 Dashboard Admin</button></nav>
+<nav class="tabs"><button id="tabOrder" class="tab active" onclick="showView('order')">🛍️ Form Pemesanan</button><button id="tabAdmin" class="tab hidden" onclick="showView('admin')">📊 Dashboard Admin</button></nav>
 
 <main id="orderView">
 <section class="card"><h2>🧑‍🎓 Data Pemesan</h2><div class="grid"><div class="field"><label for="student">Nama murid</label><input id="student" maxlength="100" placeholder="Nama lengkap murid"></div><div class="field"><label for="className">Kelas</label><input id="className" maxlength="30" placeholder="Contoh: XI-4"></div><div class="field"><label for="contact">Nama orang tua (opsional)</label><input id="contact" maxlength="100" placeholder="Nama orang tua/wali"></div><div class="field"><label for="note">Catatan (opsional)</label><input id="note" maxlength="250" placeholder="Catatan pesanan"></div></div></section>
@@ -38,7 +38,7 @@
 <div class="card"><h2>📋 Daftar Pesanan</h2><div class="tablewrap"><table><thead><tr><th>Kode / Waktu</th><th>Murid / Kelas</th><th>Detail produk</th><th>Total</th><th>Metode</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="ordersBody"><tr><td colspan="7">Belum ada data dimuat.</td></tr></tbody></table></div><div id="dashboardStatus" class="status"></div></div>
 </section>
 </main>
-<footer class="foot">Saynana · EcoPreneur TechFest 2026<br>Pastikan detail pesanan benar sebelum dikirim.</footer>
+<footer class="foot" id="secretFoot">Saynana · EcoPreneur TechFest 2026<br>Pastikan detail pesanan benar sebelum dikirim.</footer>
 </div>
 <div id="printArea"></div>
 <script>
@@ -78,5 +78,9 @@ function slipHtml(o){const items=o.saynana_order_items||[];const packs=items.red
 function printOrders(list){el('printArea').innerHTML=list.map(slipHtml).join('');setTimeout(()=>window.print(),100)}
 function printOrder(id){const o=allOrders.find(x=>x.id===id);if(o)printOrders([o])}
 function printFiltered(){const l=filteredOrders();if(!l.length){el('dashboardStatus').textContent='Tidak ada pesanan untuk dicetak.';return}if(l.length>50&&!confirm('Akan mencetak '+l.length+' lembar. Lanjutkan?'))return;printOrders(l)}
+let secretTaps=0,secretTimer=null;
+function revealAdmin(){el('tabAdmin').classList.remove('hidden');showView('admin')}
+el('secretFoot').addEventListener('click',()=>{secretTaps++;clearTimeout(secretTimer);secretTimer=setTimeout(()=>{secretTaps=0},2000);if(secretTaps>=5){secretTaps=0;revealAdmin()}});
+if(location.hash==='#admin')revealAdmin();
 </script>
 </body></html>
